@@ -6,129 +6,234 @@ import sqlite3
 import multiprocessing 
 from functools import partial 
 
-manager = multiprocessing.Manager()
-files = manager.dict()
+# dictionary containing info about Ubuntu specific words/commands (with file/line number description)
+# format: { key: filepath, value: {key: command, value: [line numbers]} }
+files_commands = {}
 
-# usage function 
+# dictionary containing info about Ubuntu specific packages (with file/line number description)
+# format: { key: filepath, value: {key: package name, value: [line numbers]} }
+files_packages = {}
+
+# list containing dictionaries with info about ubuntu-specific paths found within a codebase 
+# format: [ { key: directory path, value: [ ubuntu-specific path, Mariner replacement ] }, ... ]
+directory_paths = []
+
+# usage function for Ubuntu detection tool 
 def usage():
-    sys.exit(0)
+    print("Ubuntu Detection Tool: Usage Information")
+    print("")
 
-# function to add information to the database 
-def addto_db(path, command, line_num):
-    # make sure file path is a key in data, if not add
-    if path not in files:
-        files[path] = {}
+    # different modes in which the tool can be ran 
+    print("For specified file, RUN: ./detect.py [FILE PATH]")
+    print("For specified directory, RUN: ./detect.py [DIRECTORY PATH]")
+    print("To scan entirecobase, in top-level directory RUN: ./detect.py")
+
+    print("")
+    print("For more information please visit: aka.ms/ubuntu-detection")
+
+    # exit the tool 
+    sys.exit(0)
     
-    # check if command is a key for data[path]
-    if command in files[path].keys():
-        # apend line_num to list 
-        files[path][command].append(line_num)
-        # ensure no duplicates of line numbers
-        set(files[path][command])
-    # if not in data[path] add
-    else:
-        files[path][command] = [line_num]
+
+# function to add command information to the files_commands dictionary   
+def add_commands(path, commands_dict):
+    # add to the command_dict as the value for the file path in files_commands
+    files_commands[path] = commands_dict
 
     return True 
 
 
-# function to scan line for specific package names and extensions
-def package_scan(package, line):
+# function to add package information to the files_packages dictionary   
+def add_packages(path, packages_dict):
+    # add to the packages_dict as the value for the file path in files_packages
+    files_packages[path] = packages_dict
 
-    return None 
+    return True 
 
 
-# function to scan line for specific file paths 
-def filepath_scan(filepath, line):
+# function to scan file for specific package names and extensions
+def package_scan(path, package):
+    # ensure path is a file by opening 
+    f = open(path)
+
+    # check to make sure f exists:
+    if not f: 
+        print("ERROR: " + path +" is not a readable file")
+        return {}
     
-    return None 
+    # put pacakage name in proper string format 
+    p = str(package[0])
+
+    # create temp dictionary to return 
+    package_dict = {p: []}
+
+    # loop through file and check if package name is anywhere in the file 
+    # try/except for when file is unreadable 
+    try:
+        for line_num, line in enumerate(f, 1):
+            # get line and strip 
+            code = str(line.strip())
+            # check if the package is in the line
+            if p in code:
+                # if it is add it to the temp dictionary 
+                package_dict[p].append(line_num)
+    except UnicodeDecodeError:
+        # print("UnicodeDecodeError Exception")
+        return {}
+
+    # properly close the file 
+    f.close()
+
+    # return temporary dictionary 
+    return package_dict
 
 
 # function to scan line for specfic commands 
-def command_scan(path, line_num, line, command):
-    # put in proper format 
+def command_scan(path, command):
+    # ensure path is a file by opening 
+    f = open(path)
+
+    # check to make sure f exists:
+    if not f: 
+        print("ERROR: " + path +" is not a readable file")
+        return False 
+    
+    # put command in proper format 
     c = str(command[0])
-    l = str(line)
 
-    # check if the command is in the line
-    if c in l:
-        addto_db(path, c, line_num)
+    # create temp dictionary to return 
+    command_dict = {c: []}
 
-    return files
+    # loop through file and check if command is anywhere in the file 
+    # try/except for when file is unreadable 
+    try:
+        for line_num, line in enumerate(f, 1):
+            # strip new line and call line_scan
+            code = str(line.strip())
+                # check if the command is in the line
+            if c in code:
+                # if it is add it to the temp dictionary 
+                command_dict[c].append(line_num)
+    except UnicodeDecodeError:
+        # print("UnicodeDecodeError Exception")
+        return {}
+
+    # properly close the file 
+    f.close()
+
+    # return temporary dictionary 
+
+    return command_dict
 
 
-# function to scan line in a file
-def line_scan(path, line, line_num):
+# function to scan file and send to proper function using multiprocessing 
+def file_scan(path):
     # establish connection with databse containing Ubuntu syntax 
     conn = sqlite3.connect('ubuntu.db')
+
+    # set connection cursor 
     cur = conn.cursor()
 
-    # COMMANDS 
+    # COMMANDS - this is where the script scans for Ubuntu specific commands 
     # get each Ubuntu command in db and put into list
     cur.execute('SELECT command from commands')
+
+    # inputs is the list of commands
     inputs = cur.fetchall()
+
+    # records is the number of commands the db contains 
     records = len(inputs)
 
     # start processing pool, with a process for each record
     pool = multiprocessing.Pool()
     pool = multiprocessing.Pool(processes=records)
 
-    # set line arg for these command_scan function calls 
-    #func_command = partial 
-    func_command = partial(command_scan, path, line_num, line)
+    # set args for these command_scan function calls 
+    func_command = partial(command_scan, path)
 
-    # do processing 
-    files = pool.map(func_command, inputs)
+    # do processing - process for each command
+    commands = pool.map(func_command, inputs)
 
-    #if found_commands != ['']:
-        #print(found_commands)
-
-    # output information about found commands 
-    #print(found_commands)
+    # merge commands into one dict 
+    temp_dict = {}
+    for item in commands:
+        for key, value in item.items():
+            if len(value) >= 1:
+                temp_dict[key] = value
     
-    # FILE PATHS 
-    # scan line for each Ubuntu file path in database 
-    # use multiprocessing here 
+    # if temp_dict is NOT empty: add temp_dict with commands + line numbers to files_commands 
+    if temp_dict:
+        add_commands(path, temp_dict)
 
-
+    '''
     # PACKAGES 
-    # scan line for each Ubuntu package in database 
-    # use multiprocessing here 
+    # get each Ubuntu package in db and put into list
+    cur.execute('SELECT package from packages')
 
+    # inputs is the list of packages
+    inputs = cur.fetchall()
+
+    # records is the number of packages the db contains 
+    records = len(inputs)
+
+    # start processing pool, with a process for each record
+    pool = multiprocessing.Pool()
+    pool = multiprocessing.Pool(processes=records)
+
+    # set args for these package_scan function calls 
+    func_package = partial(package_scan, path)
+
+    # do processing - process for each package
+    packages = pool.map(func_package, inputs)
+
+    # merge commands into one dict 
+    temp_dict = {}
+    for item in packages:
+        for key, value in item.items():
+            if len(value) >= 1:
+                temp_dict[key] = value
+    
+    # if temp_dict is NOT empty: add temp_dict with packages + line numbers to greater files dictionary 
+    if temp_dict:
+        add_packages(path, temp_dict)
+    '''
 
     # close database connection
     conn.close() 
-
-    return True 
-
-# function to scan file 
-def file_scan(path):
-    # ensure path is a file by opening 
-    f = open(path)
-
-    # check to make sure f exists:
-    if not f: 
-        return False 
-
-    # get line and line number 
-    try:
-        for line_num, line in enumerate(f, 1):
-            # strip new line and call line_scan
-            code = line.strip()
-            line_scan(path, code, line_num)
-    except UnicodeDecodeError:
-        #print("UnicodeDecodeError Exception")
-        return 
-            
+    
+    # return out of function to scan next item
     return True
+
 
 # function to scan directory name for Ubuntu-specifics
 def dirname_scan(dir_path):
+    # establish connection with databse containing Ubuntu syntax 
+    conn = sqlite3.connect('ubuntu.db')
+
+    # set curser 
+    cur = conn.cursor()
+
+    # FILE PATHS 
+    # get each Ubuntu-specific path in db and put into list
+    cur.execute('')
+
+    # paths contains all ubuntu-specific file paths in database 
+    paths = cur.fetchall()
+
+    # loop through every path in paths and check to see if current directory path contains path 
+    for path in paths:
+        # if it does add info to the global dictionary directory_paths 
+        if path in dir_path:
+            directory_paths.append({dir_path: [path, '''replacement''']})
+
+    # close database connection
+    conn.close()
+
+    # return out of function to scan next item
     return True
 
 
-
-# function to scan directories for files 
+# function to scan directories for its contents and send to the proper scanning function
 def dir_scan(cwd): 
     # scan directory name for Ubuntu-specifics 
     dirname_scan(cwd)
@@ -137,8 +242,12 @@ def dir_scan(cwd):
     dir_items = os.listdir(cwd)
 
     # remove ubuntu.db file
-    if 'ubuntu.db' in dir_items: 
-        dir_items.remove('ubuntu.db')
+    if "ubuntu.db" in dir_items: 
+        dir_items.remove("ubuntu.db")
+
+    # remove detect.py file
+    if "detect.py" in dir_items: 
+        dir_items.remove("detect.py")
 
     # walk through items in directory 
     for item in dir_items:
@@ -162,10 +271,21 @@ def dir_scan(cwd):
 
 
 def main():
-    global files
-    # if singular file inputted (argv = 2), call scan_file
+    # if singular file or directory is inputted (argv = 2), determine if file or directory, and call proper file 
     if len(sys.argv) == 2:
-        file_scan(str(sys.argv[1]))
+        # put path in proper string format 
+        path = str(sys.argv[1])
+        # if path is a file call file_scan
+        if os.path.isfile(path):
+            file_scan(path)
+        # elif path is a directory call dir_scan
+        elif os.path.isdir(path):
+            dir_scan(path)
+        # if it is niether print error and call usage 
+        else:
+            print("ERROR: Inputted invald file/directory path.")
+            print("")
+            usage()
 
     # if no inputted file (argv = 1), call scan_dir on current path
     elif len(sys.argv) == 1:
@@ -177,9 +297,11 @@ def main():
     else:
         usage()
     
-    print(files)
+    print(files_commands)
+
+    return True 
 
 
 if __name__ == '__main__':
     # call main
-    main()
+    main()  

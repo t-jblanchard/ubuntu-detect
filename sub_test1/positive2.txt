@@ -1,0 +1,6 @@
+apt 
+apt 
+apt 
+apt
+apt
+apache2
