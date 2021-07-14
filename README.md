@@ -2,13 +2,13 @@
 
 
 ## Table of contents
-* [General info](#general-info)
+* [General Info](#general-info)
 * [Technologies](#technologies)
 * [Setup](#setup)
 * [Usage](#usage)
 * [Updates](#updates)
 
-## General info
+## General Info
 
 
 ## Technologies
