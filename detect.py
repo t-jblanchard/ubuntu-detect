@@ -15,9 +15,9 @@ files_commands = {}
 # format: { key: filepath, value: {key: package name, value: [line numbers]} }
 files_packages = {}
 
-# list containing dictionaries with info about ubuntu-specific paths found within a codebase 
-# format: [ { key: directory path, value: [ ubuntu-specific path, Mariner replacement ] }, ... ]
-directory_paths = []
+# dictionary containing info about Ubuntu specific filepaths (with file/line number description)
+# format: { key: filepath, value: ubuntu relative path}
+filepaths = {}
 
 # usage function for Ubuntu detection tool 
 def usage():
@@ -35,11 +35,8 @@ def usage():
     # exit the tool 
     sys.exit(0)
     
-# convert dictionary data into .csv file format for customer to reference 
-def output_csv(data_dict, csv_filename):
-    # populate dictionary with Mariner command/package replacements 
-    replacement_dict = mariner_replacements()
-
+# convert dictionary data for files_commands and file_packages into .csv file format for customer to reference 
+def output_csv1(replacement_dict, data_dict, csv_filename):
     # name csv file 
     csv_file = csv_filename + ".csv"
 
@@ -48,9 +45,25 @@ def output_csv(data_dict, csv_filename):
         writer = csv.writer(f)
 
         # iterate through dictionary containing data and add to csv file 
-        for filepath, command_dict in data_dict.items():
-            for command, line_nums in command_dict.items():
-                writer.writerow([filepath, command, line_nums, replacement_dict[command]])
+        for filepath, syntax_dict in data_dict.items():
+            for syntax, line_nums in syntax_dict.items():
+                writer.writerow([filepath, syntax, line_nums, replacement_dict[syntax]])
+    
+    return True
+
+
+# convert dictionary data for filepaths into .csv file format for customer to reference 
+def output_csv2(replacement_dict, data_dict, csv_filename):
+    # name csv file 
+    csv_file = csv_filename + ".csv"
+
+    # open file with write permissions 
+    with open(csv_file, 'w') as f:  
+        writer = csv.writer(f)
+
+        # iterate through dictionary containing data and add to csv file 
+        for filepath, relative_filepath in data_dict:
+            writer.writerow([filepath, relative_filepath, replacement_dict[relative_filepath]])
     
     return True
 
@@ -58,12 +71,11 @@ def output_csv(data_dict, csv_filename):
 # populate Mariner replacement dictionary 
 def mariner_replacements():
     # establish connection with databse containing Ubuntu syntax 
-    conn = sqlite3.connect('ubuntu.db')
+    conn = sqlite3.connect('database/ubuntu.db')
 
     # set connection cursor 
     cur = conn.cursor()
 
-    # COMMANDS - this is where the script creates dictionary for Ubuntu specific commands 
     # get each Ubuntu command in db and put into list
     cur.execute('SELECT command from commands')
     commands = cur.fetchall()
@@ -78,7 +90,15 @@ def mariner_replacements():
 
     # get each Ubuntu package replacement in db and put into list 
     cur.execute('SELECT mariner_replacement from packages')
-    packages_replacements = cur.fetchall()
+    package_replacements = cur.fetchall()
+
+    # get each Ubuntu filepath in db and put into list
+    cur.execute('SELECT filepath from filepaths')
+    filepaths = cur.fetchall()
+
+    # get each Ubuntu filepath replacement in db and put into list 
+    cur.execute('SELECT mariner_replacement from filepaths')
+    filepath_replacements = cur.fetchall()
 
     # initial dictionary 
     replacement_dict = {}
@@ -89,13 +109,16 @@ def mariner_replacements():
     
     # add packages + replacements to dictionary 
     for index, package in enumerate(packages): 
-        replacement_dict[str(package[0])] = str(packages_replacements[index][0])
+        replacement_dict[str(package[0])] = str(package_replacements[index][0])
+
+    # add filepaths + replacements to dictionary 
+    for index, filepath in enumerate(filepaths): 
+        replacement_dict[str(filepath[0])] = str(filepath_replacements[index][0])
 
     # close database connection
     conn.close() 
 
     # return newly populated dictionary 
-    print(replacement_dict)
     return replacement_dict
 
 
@@ -193,7 +216,7 @@ def command_scan(path, command):
 # function to scan file and send to proper function using multiprocessing 
 def file_scan(path):
     # establish connection with databse containing Ubuntu syntax 
-    conn = sqlite3.connect('ubuntu.db')
+    conn = sqlite3.connect('database/ubuntu.db')
 
     # set connection cursor 
     cur = conn.cursor()
@@ -272,23 +295,25 @@ def file_scan(path):
 # function to scan directory name for Ubuntu-specifics
 def dirname_scan(dir_path):
     # establish connection with databse containing Ubuntu syntax 
-    conn = sqlite3.connect('ubuntu.db')
+    conn = sqlite3.connect('database/ubuntu.db')
 
     # set curser 
     cur = conn.cursor()
 
     # FILE PATHS 
     # get each Ubuntu-specific path in db and put into list
-    cur.execute('')
+    cur.execute('SELECT filepath from filepaths')
 
     # paths contains all ubuntu-specific file paths in database 
     paths = cur.fetchall()
 
     # loop through every path in paths and check to see if current directory path contains path 
     for path in paths:
+        # put path in correct string format 
+        path = str(path[0])
         # if it does add info to the global dictionary directory_paths 
         if path in dir_path:
-            directory_paths.append({dir_path: [path, '''replacement''']})
+            filepaths[dir_path] = path 
 
     # close database connection
     conn.close()
@@ -361,9 +386,13 @@ def main():
     else:
         usage()
     
+    # populate mariner replacement dictionary 
+    replacement_dict = mariner_replacements()
+
     # call output_csv to output data file for both packages and commands 
-    output_csv(files_commands, "commands")
-    output_csv(files_packages, "packages")
+    output_csv1(replacement_dict, files_commands, "commands")
+    output_csv1(replacement_dict, files_packages, "packages")
+    output_csv2(replacement_dict, filepaths, "filepaths")
 
     return True 
 
