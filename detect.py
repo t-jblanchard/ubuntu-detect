@@ -5,6 +5,7 @@ import os
 import sqlite3
 import multiprocessing 
 from functools import partial 
+import csv
 
 # dictionary containing info about Ubuntu specific words/commands (with file/line number description)
 # format: { key: filepath, value: {key: command, value: [line numbers]} }
@@ -34,6 +35,69 @@ def usage():
     # exit the tool 
     sys.exit(0)
     
+# convert dictionary data into .csv file format for customer to reference 
+def output_csv(data_dict, csv_filename):
+    # populate dictionary with Mariner command/package replacements 
+    replacement_dict = mariner_replacements()
+
+    # name csv file 
+    csv_file = csv_filename + ".csv"
+
+    # open file with write permissions 
+    with open(csv_file, 'w') as f:  
+        writer = csv.writer(f)
+
+        # iterate through dictionary containing data and add to csv file 
+        for filepath, command_dict in data_dict.items():
+            for command, line_nums in command_dict.items():
+                writer.writerow([filepath, command, line_nums, replacement_dict[command]])
+    
+    return True
+
+
+# populate Mariner replacement dictionary 
+def mariner_replacements():
+    # establish connection with databse containing Ubuntu syntax 
+    conn = sqlite3.connect('ubuntu.db')
+
+    # set connection cursor 
+    cur = conn.cursor()
+
+    # COMMANDS - this is where the script creates dictionary for Ubuntu specific commands 
+    # get each Ubuntu command in db and put into list
+    cur.execute('SELECT command from commands')
+    commands = cur.fetchall()
+
+    # get each Ubuntu command replacement in db and put into list 
+    cur.execute('SELECT mariner_replacement from commands')
+    command_replacements = cur.fetchall()
+
+    # get each Ubuntu package in db and put into list
+    cur.execute('SELECT package from packages')
+    packages = cur.fetchall()
+
+    # get each Ubuntu package replacement in db and put into list 
+    cur.execute('SELECT mariner_replacement from packages')
+    packages_replacements = cur.fetchall()
+
+    # initial dictionary 
+    replacement_dict = {}
+
+    # add commands + replacements to dictionary 
+    for index, command in enumerate(commands): 
+        replacement_dict[str(command[0])] = str(command_replacements[index][0])
+    
+    # add packages + replacements to dictionary 
+    for index, package in enumerate(packages): 
+        replacement_dict[str(package[0])] = str(packages_replacements[index][0])
+
+    # close database connection
+    conn.close() 
+
+    # return newly populated dictionary 
+    print(replacement_dict)
+    return replacement_dict
+
 
 # function to add command information to the files_commands dictionary   
 def add_commands(path, commands_dict):
@@ -58,7 +122,7 @@ def package_scan(path, package):
 
     # check to make sure f exists:
     if not f: 
-        print("ERROR: " + path +" is not a readable file")
+        print("ERROR: " + path + " is not a readable file")
         return {}
     
     # put pacakage name in proper string format 
@@ -165,7 +229,7 @@ def file_scan(path):
     if temp_dict:
         add_commands(path, temp_dict)
 
-    '''
+    
     # PACKAGES 
     # get each Ubuntu package in db and put into list
     cur.execute('SELECT package from packages')
@@ -196,7 +260,7 @@ def file_scan(path):
     # if temp_dict is NOT empty: add temp_dict with packages + line numbers to greater files dictionary 
     if temp_dict:
         add_packages(path, temp_dict)
-    '''
+    
 
     # close database connection
     conn.close() 
@@ -297,7 +361,9 @@ def main():
     else:
         usage()
     
-    print(files_commands)
+    # call output_csv to output data file for both packages and commands 
+    output_csv(files_commands, "commands")
+    output_csv(files_packages, "packages")
 
     return True 
 
