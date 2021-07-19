@@ -13,11 +13,10 @@ Tool to scan a codebase, directory, or file for a list of common Ubuntu-specific
 
 ## Technologies
 Project is created with:
-* Python3
-* SQLite Database  
+* Python3  
 	
 ## Setup
-Clone script and database:
+Clone repository onto machine:
 ```
 $ git clone https://github.com/t-jblanchard/ubuntu-detect.git
 ```
@@ -27,28 +26,29 @@ To ensure latest update of script run:
 ```
 $ git pull
 ```
+To see usage information:  
+```
+$ ./detect.py usage
+```
 To run script on entire codebase:  
 ```
 $ ./detect.py [path to codebase]
 ```
-To run script on specific file:
+To run script on specific file or directory:
 ```
-$ git clone https://github.com/t-jblanchard/ubuntu-detect.git
 $ ./detect.py [full filepath]
 ```
 
 ## Updates
-1. Clone script and database:
+_Note: Instructions are for on a machine, but updates can also be done directly on GitHub_
+1. Clone script:
 ```
 $ git clone https://github.com/t-jblanchard/ubuntu-detect.git
 ```
-2. Update packages.csv, commands.csv, or filepaths.csv with the following format: 
-	**ubuntu package/command/filepath, mariner replacement, notes**
-3. Update SQLite database (ubuntu.db) but running:
-```
-$ ./csv_reader.py
-```
-4. Push changes to repo:
+2. Update packages.csv, commands.csv, or filepaths.csv with the following format (delimeter: ','): 
+	**[ubuntu package/command/filepath],[mariner replacement],[notes]**
+
+3. Push changes to repo:
 ```
 $ git push -u origin main
 ```

@@ -6,18 +6,29 @@ import sqlite3
 import multiprocessing 
 from functools import partial 
 import csv
-
-# dictionary containing info about Ubuntu specific words/commands (with file/line number description)
-# format: { key: filepath, value: {key: command, value: [line numbers]} }
-files_commands = {}
+import time
 
 # dictionary containing info about Ubuntu specific packages (with file/line number description)
 # format: { key: filepath, value: {key: package name, value: [line numbers]} }
-files_packages = {}
+found_packages = {}
+
+# dictionary containing info about Ubuntu specific words/commands (with file/line number description)
+# format: { key: filepath, value: {key: command, value: [line numbers]} }
+found_commands = {}
 
 # dictionary containing info about Ubuntu specific filepaths (with file/line number description)
 # format: { key: filepath, value: ubuntu relative path}
-filepaths = {}
+found_filepaths = {}
+
+# lists containing Ubuntu-specific instances from packages.csv, commands.csv, and filepaths.csv
+ubuntu_packages_list = []
+ubuntu_commands_list  = [] 
+ubuntu_filepaths_list = []
+
+# dictionaries containing Ubuntu-specific instances from packages.csv, commands.csv, and filepaths.csv as keys and the Mariner replacement + notes as values
+ubuntu_packages_dict ={}
+ubuntu_commands_dict = {}
+ubuntu_filepaths_dict = {}
 
 # usage function for Ubuntu detection tool 
 def usage():
@@ -25,17 +36,15 @@ def usage():
     print("")
 
     # different modes in which the tool can be ran 
-    print("For specified file, RUN: ./detect.py [FILE PATH]")
-    print("For specified directory, RUN: ./detect.py [DIRECTORY PATH]")
-    print("To scan entirecobase, in top-level directory RUN: ./detect.py")
-
+    print("For specified file, RUN: ./detect.py [FUll FILE PATH]")
+    print("For specified directory/codebase, RUN: ./detect.py [ FULL DIRECTORY PATH]")
     print("")
     print("For more information please visit: aka.ms/ubuntu-detection")
 
     # exit the tool 
     sys.exit(0)
     
-# convert dictionary data for files_commands and file_packages into .csv file format for customer to reference 
+# convert dictionary data for found_commands and found_packages into .csv file format for customer to reference 
 def output_csv1(replacement_dict, data_dict, csv_filename):
     # name csv file 
     csv_file = csv_filename + ".csv"
@@ -47,7 +56,8 @@ def output_csv1(replacement_dict, data_dict, csv_filename):
         # iterate through dictionary containing data and add to csv file 
         for filepath, syntax_dict in data_dict.items():
             for syntax, line_nums in syntax_dict.items():
-                writer.writerow([filepath, syntax, line_nums, replacement_dict[syntax]])
+                replacement = replacement_dict[syntax]
+                writer.writerow([filepath, line_nums, syntax, replacement[0], replacement[1]])
     
     return True
 
@@ -62,78 +72,25 @@ def output_csv2(replacement_dict, data_dict, csv_filename):
         writer = csv.writer(f)
 
         # iterate through dictionary containing data and add to csv file 
-        for filepath, relative_filepath in data_dict:
-            writer.writerow([filepath, relative_filepath, replacement_dict[relative_filepath]])
+        for filepath, relative_filepath in data_dict.items():
+            replacement = replacement_dict[relative_filepath]
+            writer.writerow([filepath, relative_filepath, replacement[0], replacement[1]])
     
     return True
 
 
-# populate Mariner replacement dictionary 
-def mariner_replacements():
-    # establish connection with databse containing Ubuntu syntax 
-    conn = sqlite3.connect('database/ubuntu.db')
-
-    # set connection cursor 
-    cur = conn.cursor()
-
-    # get each Ubuntu command in db and put into list
-    cur.execute('SELECT command from commands')
-    commands = cur.fetchall()
-
-    # get each Ubuntu command replacement in db and put into list 
-    cur.execute('SELECT mariner_replacement from commands')
-    command_replacements = cur.fetchall()
-
-    # get each Ubuntu package in db and put into list
-    cur.execute('SELECT package from packages')
-    packages = cur.fetchall()
-
-    # get each Ubuntu package replacement in db and put into list 
-    cur.execute('SELECT mariner_replacement from packages')
-    package_replacements = cur.fetchall()
-
-    # get each Ubuntu filepath in db and put into list
-    cur.execute('SELECT filepath from filepaths')
-    filepaths = cur.fetchall()
-
-    # get each Ubuntu filepath replacement in db and put into list 
-    cur.execute('SELECT mariner_replacement from filepaths')
-    filepath_replacements = cur.fetchall()
-
-    # initial dictionary 
-    replacement_dict = {}
-
-    # add commands + replacements to dictionary 
-    for index, command in enumerate(commands): 
-        replacement_dict[str(command[0])] = str(command_replacements[index][0])
-    
-    # add packages + replacements to dictionary 
-    for index, package in enumerate(packages): 
-        replacement_dict[str(package[0])] = str(package_replacements[index][0])
-
-    # add filepaths + replacements to dictionary 
-    for index, filepath in enumerate(filepaths): 
-        replacement_dict[str(filepath[0])] = str(filepath_replacements[index][0])
-
-    # close database connection
-    conn.close() 
-
-    # return newly populated dictionary 
-    return replacement_dict
-
-
-# function to add command information to the files_commands dictionary   
-def add_commands(path, commands_dict):
-    # add to the command_dict as the value for the file path in files_commands
-    files_commands[path] = commands_dict
+# function to add package information to the found_packages dictionary   
+def add_packages(path, packages_dict):
+    # add to the packages_dict as the value for the file path in found_packages
+    found_packages[path] = packages_dict
 
     return True 
 
 
-# function to add package information to the files_packages dictionary   
-def add_packages(path, packages_dict):
-    # add to the packages_dict as the value for the file path in files_packages
-    files_packages[path] = packages_dict
+# function to add command information to the found_commands dictionary   
+def add_commands(path, commands_dict):
+    # add to the command_dict as the value for the file path in found_commands
+    found_commands[path] = commands_dict
 
     return True 
 
@@ -147,12 +104,9 @@ def package_scan(path, package):
     if not f: 
         print("ERROR: " + path + " is not a readable file")
         return {}
-    
-    # put pacakage name in proper string format 
-    p = str(package[0])
 
     # create temp dictionary to return 
-    package_dict = {p: []}
+    package_dict = {package: []}
 
     # loop through file and check if package name is anywhere in the file 
     # try/except for when file is unreadable 
@@ -161,9 +115,9 @@ def package_scan(path, package):
             # get line and strip 
             code = str(line.strip())
             # check if the package is in the line
-            if p in code:
+            if package in code:
                 # if it is add it to the temp dictionary 
-                package_dict[p].append(line_num)
+                package_dict[package].append(line_num)
     except UnicodeDecodeError:
         # print("UnicodeDecodeError Exception")
         return {}
@@ -184,12 +138,9 @@ def command_scan(path, command):
     if not f: 
         print("ERROR: " + path +" is not a readable file")
         return False 
-    
-    # put command in proper format 
-    c = str(command[0])
 
     # create temp dictionary to return 
-    command_dict = {c: []}
+    command_dict = {command: []}
 
     # loop through file and check if command is anywhere in the file 
     # try/except for when file is unreadable 
@@ -198,9 +149,9 @@ def command_scan(path, command):
             # strip new line and call line_scan
             code = str(line.strip())
                 # check if the command is in the line
-            if c in code:
+            if command in code:
                 # if it is add it to the temp dictionary 
-                command_dict[c].append(line_num)
+                command_dict[command].append(line_num)
     except UnicodeDecodeError:
         # print("UnicodeDecodeError Exception")
         return {}
@@ -209,27 +160,14 @@ def command_scan(path, command):
     f.close()
 
     # return temporary dictionary 
-
     return command_dict
 
 
 # function to scan file and send to proper function using multiprocessing 
 def file_scan(path):
-    # establish connection with databse containing Ubuntu syntax 
-    conn = sqlite3.connect('database/ubuntu.db')
-
-    # set connection cursor 
-    cur = conn.cursor()
-
     # COMMANDS - this is where the script scans for Ubuntu specific commands 
-    # get each Ubuntu command in db and put into list
-    cur.execute('SELECT command from commands')
-
-    # inputs is the list of commands
-    inputs = cur.fetchall()
-
     # records is the number of commands the db contains 
-    records = len(inputs)
+    records = len(ubuntu_commands_list)
 
     # start processing pool, with a process for each record
     pool = multiprocessing.Pool()
@@ -239,7 +177,7 @@ def file_scan(path):
     func_command = partial(command_scan, path)
 
     # do processing - process for each command
-    commands = pool.map(func_command, inputs)
+    commands = pool.map(func_command, ubuntu_commands_list)
 
     # merge commands into one dict 
     temp_dict = {}
@@ -248,20 +186,13 @@ def file_scan(path):
             if len(value) >= 1:
                 temp_dict[key] = value
     
-    # if temp_dict is NOT empty: add temp_dict with commands + line numbers to files_commands 
+    # if temp_dict is NOT empty: add temp_dict with commands + line numbers to found_commands 
     if temp_dict:
         add_commands(path, temp_dict)
-
     
-    # PACKAGES 
-    # get each Ubuntu package in db and put into list
-    cur.execute('SELECT package from packages')
-
-    # inputs is the list of packages
-    inputs = cur.fetchall()
-
+    # PACKAGES
     # records is the number of packages the db contains 
-    records = len(inputs)
+    records = len(ubuntu_packages_list)
 
     # start processing pool, with a process for each record
     pool = multiprocessing.Pool()
@@ -271,7 +202,7 @@ def file_scan(path):
     func_package = partial(package_scan, path)
 
     # do processing - process for each package
-    packages = pool.map(func_package, inputs)
+    packages = pool.map(func_package, ubuntu_packages_list)
 
     # merge commands into one dict 
     temp_dict = {}
@@ -284,64 +215,34 @@ def file_scan(path):
     if temp_dict:
         add_packages(path, temp_dict)
     
-
-    # close database connection
-    conn.close() 
-    
     # return out of function to scan next item
     return True
 
 
 # function to scan directory name for Ubuntu-specifics
 def dirname_scan(dir_path):
-    # establish connection with databse containing Ubuntu syntax 
-    conn = sqlite3.connect('database/ubuntu.db')
-
-    # set curser 
-    cur = conn.cursor()
-
-    # FILE PATHS 
-    # get each Ubuntu-specific path in db and put into list
-    cur.execute('SELECT filepath from filepaths')
-
-    # paths contains all ubuntu-specific file paths in database 
-    paths = cur.fetchall()
-
     # loop through every path in paths and check to see if current directory path contains path 
-    for path in paths:
-        # put path in correct string format 
-        path = str(path[0])
-        # if it does add info to the global dictionary directory_paths 
+    for path in ubuntu_filepaths_list:
+        # if the path is in the dir_path add info to the global dictionary directory_paths 
         if path in dir_path:
-            filepaths[dir_path] = path 
-
-    # close database connection
-    conn.close()
+            found_filepaths[dir_path] = path 
 
     # return out of function to scan next item
     return True
 
 
 # function to scan directories for its contents and send to the proper scanning function
-def dir_scan(cwd): 
+def dir_scan(dir_path): 
     # scan directory name for Ubuntu-specifics 
-    dirname_scan(cwd)
+    dirname_scan(dir_path)
 
     # get items in directory 
-    dir_items = os.listdir(cwd)
-
-    # remove ubuntu.db file
-    if "ubuntu.db" in dir_items: 
-        dir_items.remove("ubuntu.db")
-
-    # remove detect.py file
-    if "detect.py" in dir_items: 
-        dir_items.remove("detect.py")
+    dir_items = os.listdir(dir_path)
 
     # walk through items in directory 
     for item in dir_items:
         # construct full path of item
-        full_path = cwd + '/' + item 
+        full_path = dir_path + '/' + item 
 
         # check if item is a file -> if yes, call scan_file 
         if os.path.isfile(full_path):
@@ -359,40 +260,102 @@ def dir_scan(cwd):
     return True 
 
 
+# function to read .csv data files into respective data structures 
+def csv_reader(packages, commands, filepaths):
+    # PACKAGES: open packages.csv and read into data structures
+    with open(packages) as csvfile:
+        # use csv.reader to parse
+        data = csv.reader(csvfile, delimiter = ',')
+        
+        # loop through row by row 
+        for contents in data:
+            # set each element in list properly 
+            ubuntu_package = contents[0]
+            mariner_replacement = contents[1]
+            notes = contents[2] 
+
+            # append to ubuntu_packages_list 
+            ubuntu_packages_list.append(ubuntu_package)
+
+            # add to ubuntu_packages_dict 
+            ubuntu_packages_dict[ubuntu_package] = [mariner_replacement, notes]
+
+    # COMMANDS: open commands.csv and read into data structures
+    with open(commands) as csvfile:
+        # use csv.reader to parse
+        data = csv.reader(csvfile, delimiter = ',')
+        
+        # loop through row by row
+        for contents in data:
+            # set each element in list properly 
+            ubuntu_command = contents[0]
+            mariner_replacement = contents[1]
+            notes = contents[2] 
+
+            # append to ubuntu_commands_list 
+            ubuntu_commands_list.append(ubuntu_command)
+
+            # add to ubuntu_commands_dict 
+            ubuntu_commands_dict[ubuntu_command] = [mariner_replacement, notes]
+    
+    # FILEPATHS: open filepaths.csv and read into data structures
+    with open(filepaths) as csvfile:
+        # use csv.reader to parse
+        data = csv.reader(csvfile, delimiter = ',')
+   
+        # loop through row by row 
+        for contents in data:
+            # set each element in list properly 
+            ubuntu_fp = contents[0]
+            mariner_replacement = contents[1]
+            notes = contents[2] 
+
+            # append to ubuntu_filepaths_list 
+            ubuntu_filepaths_list.append(ubuntu_fp)
+
+            # add to ubuntu_filepaths_dict 
+            ubuntu_filepaths_dict[ubuntu_fp] = [mariner_replacement, notes]
+
+    # return to main
+    return True
+
+
 def main():
+    startTime = time.time()
+
     # if singular file or directory is inputted (argv = 2), determine if file or directory, and call proper file 
     if len(sys.argv) == 2:
+        # call csv_reader on data files 
+        csv_reader("database/packages.csv", "database/commands.csv", "database/filepaths.csv")
+        
         # put path in proper string format 
         path = str(sys.argv[1])
+        
         # if path is a file call file_scan
         if os.path.isfile(path):
             file_scan(path)
+        
         # elif path is a directory call dir_scan
         elif os.path.isdir(path):
             dir_scan(path)
+        
         # if it is niether print error and call usage 
         else:
             print("ERROR: Inputted invald file/directory path.")
             print("")
             usage()
-
-    # if no inputted file (argv = 1), call scan_dir on current path
-    elif len(sys.argv) == 1:
-        # get the current working directory path and call scan_dir 
-        cwd_path = os.getcwd()
-        dir_scan(cwd_path) 
-
-    # call usage if argv > 2 
+   
+    # call usage if argv != 2 
     else:
         usage()
-    
-    # populate mariner replacement dictionary 
-    replacement_dict = mariner_replacements()
 
     # call output_csv to output data file for both packages and commands 
-    output_csv1(replacement_dict, files_commands, "commands")
-    output_csv1(replacement_dict, files_packages, "packages")
-    output_csv2(replacement_dict, filepaths, "filepaths")
+    output_csv1(ubuntu_packages_dict, found_packages, "package_data")
+    output_csv1(ubuntu_commands_dict, found_commands, "command_data")
+    output_csv2(ubuntu_filepaths_dict, found_filepaths, "filepath_data")
+
+    executionTime = (time.time() - startTime)
+    print('Execution time in seconds: ' + str(executionTime))
 
     return True 
 
