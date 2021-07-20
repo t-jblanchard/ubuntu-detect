@@ -22,7 +22,8 @@ $ git clone https://github.com/t-jblanchard/ubuntu-detect.git
 ```
 
 ## Usage 
-_Note: always run in top-level of ubuntu-detect directory_
+_Note: Always run in top-level of ubuntu-detect directory_  
+
 To ensure latest update of script run:
 ```
 $ git pull
