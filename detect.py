@@ -2,11 +2,9 @@
 
 import sys 
 import os
-import sqlite3
 import multiprocessing 
 from functools import partial 
 import csv
-import time
 
 # dictionary containing info about Ubuntu specific packages (with file/line number description)
 # format: { key: filepath, value: {key: package name, value: [line numbers]} }
@@ -321,15 +319,17 @@ def csv_reader(packages, commands, filepaths):
 
 
 def main():
-    startTime = time.time()
-
     # if singular file or directory is inputted (argv = 2), determine if file or directory, and call proper file 
     if len(sys.argv) == 2:
-        # call csv_reader on data files 
-        csv_reader("database/packages.csv", "database/commands.csv", "database/filepaths.csv")
-        
         # put path in proper string format 
         path = str(sys.argv[1])
+        
+        # check if path is usage
+        if path == "usage":
+            usage()
+        
+        # call csv_reader on data files 
+        csv_reader("database/packages.csv", "database/commands.csv", "database/filepaths.csv")
         
         # if path is a file call file_scan
         if os.path.isfile(path):
@@ -353,9 +353,6 @@ def main():
     output_csv1(ubuntu_packages_dict, found_packages, "package_data")
     output_csv1(ubuntu_commands_dict, found_commands, "command_data")
     output_csv2(ubuntu_filepaths_dict, found_filepaths, "filepath_data")
-
-    executionTime = (time.time() - startTime)
-    print('Execution time in seconds: ' + str(executionTime))
 
     return True 
 
