@@ -220,7 +220,7 @@ def dirname_scan_multi(dir_path, path):
     return ''    
 
 
-# function to scan directory name for Ubuntu-specifics
+# function to scan directory name for Ubuntu-specific filepath
 def dirname_scan(dir_path):
     # start processing pool, with a process for each for number of CPUs
     pool = multiprocessing.Pool()
