@@ -217,13 +217,34 @@ def file_scan(path):
     return True
 
 
+# function to do multiprocessing for dirname_scan
+def dirname_scan_multi(dir_path, path):
+    # if the path is in the dir_path add info to the global dictionary directory_paths 
+    if path in dir_path:
+        return path
+
+    return ''    
+
+
 # function to scan directory name for Ubuntu-specifics
 def dirname_scan(dir_path):
-    # loop through every path in paths and check to see if current directory path contains path 
-    for path in ubuntu_filepaths_list:
-        # if the path is in the dir_path add info to the global dictionary directory_paths 
-        if path in dir_path:
-            found_filepaths[dir_path] = path 
+    # records is the number of filepaths the db contains 
+    records = len(ubuntu_filepaths_list)
+
+    # start processing pool, with a process for each record
+    pool = multiprocessing.Pool()
+    pool = multiprocessing.Pool(processes=records)
+
+    # set args for these package_scan function calls 
+    func_path = partial(dirname_scan_multi, dir_path)
+
+    # do processing - process for each package
+    paths = pool.map(func_path, ubuntu_filepaths_list)
+
+    # if path was found, add to the found_filepaths dictionary 
+    for path in paths:
+        if path != '':
+            found_filepaths[dir_path] = path
 
     # return out of function to scan next item
     return True
