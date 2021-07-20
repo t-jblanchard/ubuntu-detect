@@ -16,7 +16,7 @@ Project is created with:
 * Python3  
 	
 ## Setup
-Clone repository onto machine:
+Clone repository onto machine outside of codebase/desired directory:
 ```
 $ git clone https://github.com/t-jblanchard/ubuntu-detect.git
 ```
@@ -41,7 +41,7 @@ $ ./detect.py [full filepath]
 
 ## Updates
 _Note: Instructions are for on a machine, but updates can also be done directly on GitHub_
-1. Clone repo onto machine outside of codebase/desired directory:
+1. Clone repository onto machine:
 ```
 $ git clone https://github.com/t-jblanchard/ubuntu-detect.git
 ```
