@@ -38,7 +38,7 @@ $ ./detect.py [path to codebase]
 ```
 To run script on specific file or directory:
 ```
-$ ./detect.py [full filepath]
+$ ./detect.py [full path]
 ```
 
 ## Updates
