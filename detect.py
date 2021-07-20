@@ -163,13 +163,10 @@ def command_scan(path, command):
 
 # function to scan file and send to proper function using multiprocessing 
 def file_scan(path):
-    # COMMANDS - this is where the script scans for Ubuntu specific commands 
-    # records is the number of commands the db contains 
-    records = len(ubuntu_commands_list)
-
+    # COMMANDS - this is where the script scans for Ubuntu specific commands
     # start processing pool, with a process for each record
     pool = multiprocessing.Pool()
-    pool = multiprocessing.Pool(processes=records)
+    pool = multiprocessing.Pool(processes=os.cpu_count())
 
     # set args for these command_scan function calls 
     func_command = partial(command_scan, path)
@@ -189,12 +186,9 @@ def file_scan(path):
         add_commands(path, temp_dict)
     
     # PACKAGES
-    # records is the number of packages the db contains 
-    records = len(ubuntu_packages_list)
-
     # start processing pool, with a process for each record
     pool = multiprocessing.Pool()
-    pool = multiprocessing.Pool(processes=records)
+    pool = multiprocessing.Pool(processes=os.cpu_count())
 
     # set args for these package_scan function calls 
     func_package = partial(package_scan, path)
@@ -228,12 +222,9 @@ def dirname_scan_multi(dir_path, path):
 
 # function to scan directory name for Ubuntu-specifics
 def dirname_scan(dir_path):
-    # records is the number of filepaths the db contains 
-    records = len(ubuntu_filepaths_list)
-
     # start processing pool, with a process for each record
     pool = multiprocessing.Pool()
-    pool = multiprocessing.Pool(processes=records)
+    pool = multiprocessing.Pool(processes=os.cpu_count())
 
     # set args for these package_scan function calls 
     func_path = partial(dirname_scan_multi, dir_path)
