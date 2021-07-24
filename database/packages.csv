@@ -3,10 +3,10 @@ apport, ,
 apt, ,Ubuntu-specific
 apt-transport-https, ,Ubuntu-specific
 apt-utils, ,Ubuntu-specific
-aspnetcore-runtime-2.2,aspnetcore-runtime-3.1, , 
-aspnetcore-runtime-3.1,aspnetcore-runtime-3.2, , 
-aspnetcore-runtime-5.0,aspnetcore-runtime-3.3, , 
-aspnetcore-targeting-pack-3.1,aspnetcore-targeting-pack-3.1, , 
+aspnetcore-runtime-2.2,aspnetcore-runtime-3.1, 
+aspnetcore-runtime-3.1,aspnetcore-runtime-3.2,  
+aspnetcore-runtime-5.0,aspnetcore-runtime-3.3,  
+aspnetcore-targeting-pack-3.1,aspnetcore-targeting-pack-3.1, 
 auoms,auoms,check for version differences
 authbind, , 
 autoconf,autoconf, 
