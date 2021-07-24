@@ -1,0 +1,20 @@
+adduser,useradd, 
+apt,dnf,tndf/yum
+apt-cache,dnf,see documentation for apt-cache
+apt-file,dnf,see documentation for apt-file
+apt-get,dnf,see documentation for apt-get
+apt-mark,dnf,see documentation for apt-mark
+crontab, ,not supported 
+debi,dnf updgrade, 
+debsums, ,not supported
+debuild, ,not supported
+dpkg,rpm, 
+ftp, ,not supported
+ifdown, ,not supported
+ifup, ,not supported
+nano,vi,nano can be installed on Mariner
+dpkg-query,rpm-query, 
+service,systemctl, 
+visudo,,not supported
+whois,,not supported
+ufw,iptables, 
