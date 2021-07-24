@@ -15,6 +15,6 @@ ifup, ,not supported
 nano,vi,nano can be installed on Mariner
 dpkg-query,rpm-query, 
 service,systemctl, 
-visudo,,not supported
-whois,,not supported
+visudo, ,not supported
+whois, ,not supported
 ufw,iptables, 
