@@ -282,7 +282,7 @@ pigz,pigz,
 poppler-data, , 
 python3-apport, , 
 python3-problem-report, , 
-python-samba,python3-samba, , 
+python-samba,python3-samba, 
 qualys-command-line-agent, , 
 runc,runc,runc-debuginfo; mody-runc
 samba-common,samba-common, 
