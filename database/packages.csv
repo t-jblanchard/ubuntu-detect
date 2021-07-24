@@ -130,7 +130,7 @@ libc6-dev,glibc-devel,
 libcairo2,cario, 
 libcc1-0, , 
 libc-dev-bin,glibc-devel, 
-libcharon-standard-plugins, 
+libcharon-standard-plugins, , 
 libcilkrts5, , 
 libclamav9,clamav,clamav-debuginfo
 libcpprest2.10,cpprest,cpprest-devel; cpprest-debuginfo
