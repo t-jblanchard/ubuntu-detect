@@ -166,7 +166,7 @@ libisccfg160, ,
 libisc-export169, , 
 libisl19, , 
 libitm1,libitm, 
-libjbig0,jbigkit,jbigkit-devel; jbigkit-libs,
+libjbig0,jbigkit,jbigkit-devel; jbigkit-libs
 libjbig2dec0,jbig2dec-libs, 
 libjq1,jq, 
 libllvm3.9,llvm,llvm-devel; llvm-libs
