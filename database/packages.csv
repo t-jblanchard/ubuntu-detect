@@ -257,10 +257,10 @@ linux-modules-extra-4.15.0-1115-azure, ,
 linux-modules-extra-azure-lts-18.04, , 
 linux-tools-4.15.0-1115-azure,kernel-tools, 
 linux-tools-azure,kernel-tools, 
-linux-tools-azure-lts-18.04,kernel-tools, , 
-linux-tools-common,kernel-tools, , 
+linux-tools-azure-lts-18.04,kernel-tools, 
+linux-tools-common,kernel-tools, 
 livy2-2-6-99-201-39240152, , 
-manpages-dev,gl-manpages, , 
+manpages-dev,gl-manpages, 
 metricsext2, , 
 moby-buildx,moby-buildx,moby-buildx-debuginfo
 moby-cli,moby-cli,moby-cli-debuginfo
