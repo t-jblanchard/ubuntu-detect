@@ -9,7 +9,7 @@
 * [Updates](#updates)
 
 ## General Info
-Tool to scan a codebase, directory, or file for a list of common Ubuntu-specific packages, commands, and file/directory paths. 
+A tool to scan a codebase, directory, or file for a list of common Ubuntu-specific packages, commands, and file/directory paths. The tool aims to speed up the codebase reconfiguration process and assist in planning of time and resources when migrating from Ubuntu to Mariner. When using the tool, keep in mind that the scanned for instances are not 100% comprehensive, and all suggested Mariner replacements won't be universally applicable. 
 
 ## Technologies
 Project is created with:
@@ -34,7 +34,7 @@ $ ./detect.py usage
 ```
 To run script on entire codebase:  
 ```
-$ ./detect.py [path to codebase]
+$ ./detect.py [full codebase path]
 ```
 To run script on specific file or directory:
 ```
