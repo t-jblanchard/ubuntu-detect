@@ -9,7 +9,7 @@
 * [Updates](#updates)
 
 ## General Info
-Tool to scan a codebase, directory, or file for a list of common Ubuntu-specific packages, commands, and filepaths. The scanned for items are located in **database/packages.csv**, **database/commands.csv**, and **database/filepaths.csv**. 
+Tool to scan a codebase, directory, or file for a list of common Ubuntu-specific packages, commands, and file/directory paths. 
 
 ## Technologies
 Project is created with:
