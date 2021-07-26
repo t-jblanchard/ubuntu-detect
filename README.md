@@ -5,6 +5,7 @@
 * [Technologies](#technologies)
 * [Setup](#setup)
 * [Usage](#usage)
+* [Sample I/O](#sample-io)
 * [Updates](#updates)
 
 ## General Info
@@ -40,6 +41,17 @@ To run script on specific file or directory:
 $ ./detect.py [full path]
 ```
 
+## Sample I/O
+Input: 
+```
+$ git clone https://github.com/t-jblanchard/ubuntu-detect.git
+$ ./detect.py ~/codebase
+```
+Output (into top-level of ubuntu-detect):
+```
+$ commands.csv	  packages.csv	  filepaths.csv
+```
+
 ## Updates
 _Note: Instructions are for on a machine, but updates can also be done directly on GitHub_
 1. Clone repository onto machine:
@@ -52,15 +64,4 @@ $ git clone https://github.com/t-jblanchard/ubuntu-detect.git
 3. Push changes to repo:
 ```
 $ git push -u origin main
-```
-
-## Sample I/O
-Input: 
-```
-$ git clone https://github.com/t-jblanchard/ubuntu-detect.git
-$ ./detect.py ~/codebase
-```
-Output (into top-level of ubuntu-detect):
-```
-$ commands.csv	  packages.csv	  filepaths.csv
 ```
