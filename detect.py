@@ -5,6 +5,7 @@ import os
 import multiprocessing 
 from functools import partial 
 import csv
+import time
 
 # dictionary containing info about Ubuntu specific packages (with file/line number description)
 # format: { key: filepath, value: {key: package name, value: [line numbers]} }
@@ -14,7 +15,11 @@ found_packages = {}
 # format: { key: filepath, value: {key: command, value: [line numbers]} }
 found_commands = {}
 
-# dictionary containing info about Ubuntu specific filepaths (with file/line number description)
+# dictionary containing info about Ubuntu specific filepaths found in line (with file/line number description)
+# format: { key: current filepath, value: {key: filepath found, value: [line numbers]} }
+found_fps = {}
+
+# dictionary containing info about Ubuntu specific filepaths found within codebase
 # format: { key: filepath, value: ubuntu relative path}
 found_filepaths = {}
 
@@ -71,6 +76,12 @@ def add_commands(path, commands_dict):
     found_commands[path] = commands_dict
 
 
+# function to add filepath information to the found_fps dictionary   
+def add_fps(path, fps_dict):
+    # add to the fps_dict as the value for the file path in fps_commands
+    found_fps[path] = fps_dict
+
+
 # function to scan file for specific package names and extensions
 def package_scan(path, package):
     f = open(path)
@@ -82,17 +93,18 @@ def package_scan(path, package):
     # loop through file and check if package name is anywhere in the file 
     try:
         for line_num, line in enumerate(f, 1):
-            code = str(line.strip())
-            if package in code:
-                package_dict[package].append(line_num)
+            code = str(line.strip()).split()
+            for c in code:
+                if package == c:
+                    package_dict[package].append(line_num)
     except UnicodeDecodeError:
-        #sprint("UnicodeDecodeError Exception")
+        #print("UnicodeDecodeError Exception")
         return {}
     f.close()
     return package_dict
 
 
-# function to scan line for specfic commands 
+# function to scan file for specfic commands 
 def command_scan(path, command):
     f = open(path)
     if not f: 
@@ -104,14 +116,37 @@ def command_scan(path, command):
     # try/except for when file is unreadable 
     try:
         for line_num, line in enumerate(f, 1):
-            code = str(line.strip())
-            if command in code:
-                command_dict[command].append(line_num)
+            code = str(line.strip()).split()
+            for c in code:
+                if command == c:
+                    command_dict[command].append(line_num)
     except UnicodeDecodeError:
         #print("UnicodeDecodeError Exception")
         return {}
     f.close()
     return command_dict
+
+
+# function to scan file for specfic filepaths 
+def fp_scan(path, fp):
+    f = open(path)
+    if not f: 
+        print("ERROR: " + path +" is not a readae'r43e'r43e'r43e'r43e'r43e'r43e'r43e'r43e'r43e'r43e'r43e'r43ble file")
+        return False 
+    # create temp dictionary to return 
+    fp_dict = {fp: []}
+    # loop through file and check if fp is anywhere in the file 
+    # try/except for when file is unreadable 
+    try:
+        for line_num, line in enumerate(f, 1):
+            code = str(line.strip())
+            if fp in code:
+                fp_dict[fp].append(line_num)
+    except UnicodeDecodeError:
+        #print("UnicodeDecodeError Exception")
+        return {}
+    f.close()
+    return fp_dict
 
 
 # function to scan file and send to proper function using multiprocessing 
@@ -149,6 +184,25 @@ def file_scan(path):
     # if temp_dict is NOT empty: add temp_dict with packages + line numbers to greater files dictionary 
     if temp_dict:
         add_packages(path, temp_dict)
+
+    # FILEPATHS (in line)
+    # start processing pool, with a process for each for number of CPUs
+    pool = multiprocessing.Pool()
+    pool = multiprocessing.Pool(processes=os.cpu_count())
+    func_fp = partial(fp_scan, path)
+    # do processing - process for each fp
+    fps = pool.map(func_fp, ubuntu_filepaths_list)
+    # merge fps into one dict 
+    temp_dict = {}
+    for item in fps:
+        for key, value in item.items():
+            if len(value) >= 1:
+                temp_dict[key] = value
+    # if temp_dict is NOT empty: add temp_dict with packages + line numbers to greater files dictionary 
+    if temp_dict:
+        add_fps(path, temp_dict)
+
+    return 
     
 
 # function to do multiprocessing for dirname_scan
@@ -180,6 +234,8 @@ def dir_scan(dir_path):
     dir_items = os.listdir(dir_path)
     for item in dir_items:
         full_path = dir_path + '/' + item 
+        if '//' in full_path:
+            full_path = full_path.replace("//", '/')
         if os.path.isfile(full_path):
             file_scan(full_path)   
         elif os.path.isdir(full_path):
@@ -242,8 +298,11 @@ def main():
     # call output_csv to output data file for both packages and commands 
     output_csv(ubuntu_packages_dict, found_packages, "package_data", 1)
     output_csv(ubuntu_commands_dict, found_commands, "command_data", 1)
+    output_csv(ubuntu_filepaths_dict, found_fps, "filepath_inline_data", 1)
     output_csv(ubuntu_filepaths_dict, found_filepaths, "filepath_data", 2)
 
 
 if __name__ == '__main__':
-    main()  
+    start_time = time.time()
+    main()
+    print("--- %s seconds ---" % (time.time() - start_time))
