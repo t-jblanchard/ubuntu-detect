@@ -40,6 +40,23 @@ To run script on specific file or directory:
 ```
 $ ./detect.py [full path]
 ```
+Output Format:
+* **package_data.csv**: packages hardcoded into files in codebase  
+```
+[full filepath],[list of line numbers],[Ubuntu package],[Mariner counterpart (if applicable)],[notes]
+```
+* **command_data.csv**: commands hardcoded into files in codebase  
+```
+[full filepath],[list of line numbers],[Ubuntu command],[Mariner counterpart (if applicable)],[notes]
+```
+* **filepath_inline_data.csv**: paths hardcoded into files in codebase  
+```
+[full filepath],[list of line numbers],[Ubuntu path],[Mariner counterpart (if applicable)],[notes]
+```
+* **filepath_data.csv**: directory/filepaths in codebase  
+```
+[full path],[Ubuntu relative path],[Mariner counterpart],[notes]
+```
 
 ## Sample I/O
 Input: 
