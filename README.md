@@ -66,7 +66,7 @@ $ ./detect.py ~/codebase
 ```
 Output (into top-level of ubuntu-detect):
 ```
-$ commands.csv	  packages.csv	  filepaths.csv
+$ command_data.csv	  package_data.csv	  filepath_data.csv	filepath_inline_data.csv
 ```
 
 ## Updates
