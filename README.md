@@ -75,7 +75,7 @@ _Note: Instructions are for on a machine, but updates can also be done directly 
 ```
 $ git clone https://github.com/t-jblanchard/ubuntu-detect.git
 ```
-2. Update packages.csv, commands.csv, or filepaths.csv with the following format (delimeter: ','): 
+2. Update packages.csv, commands.csv, or filepaths.csv with the following format (delimeter: ','):  
 	**[ubuntu package/command/filepath],[mariner replacement],[notes]**
 
 3. Push changes to repo:
