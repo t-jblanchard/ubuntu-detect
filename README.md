@@ -1,6 +1,6 @@
 # Ubuntu Detection Tool
 
-## Table of contents
+## Table of Contents
 * [General Info](#general-info)
 * [Technologies](#technologies)
 * [Setup](#setup)
