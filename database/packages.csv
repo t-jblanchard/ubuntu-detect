@@ -1,60 +1,60 @@
-apache2-utils,htttpd; httpd-tools, 
+apache2-utils,htttpd,httpd-tools 
 apport, , 
 apt, ,Ubuntu-specific
 apt-transport-https, ,Ubuntu-specific
 apt-utils, ,Ubuntu-specific
-aspnetcore-runtime-2.2,aspnetcore-runtime-3.1, 
-aspnetcore-runtime-3.1,aspnetcore-runtime-3.2,  
-aspnetcore-runtime-5.0,aspnetcore-runtime-3.3,  
-aspnetcore-targeting-pack-3.1,aspnetcore-targeting-pack-3.1, 
-auoms,auoms,check for version differences
+aspnetcore-runtime-2.2,aspnetcore-runtime-3.1,check versioning
+aspnetcore-runtime-3.1,aspnetcore-runtime-3.2,check versioning
+aspnetcore-runtime-5.0,aspnetcore-runtime-3.3,check versioning
+aspnetcore-targeting-pack-3.1,aspnetcore-targeting-pack-3.1,check versioning
+auoms,auoms,check versioning
 authbind, , 
-autoconf,autoconf, 
-azsec-clamav,azsec-clamav,from yumrepos/azurecore
-azsec-monitor,azsec-monitor,from yumrepos/azurecore
+autoconf,autoconf,check versioning
+azsec-clamav,azsec-clamav,from yumrepos/azurecore; check versioning
+azsec-monitor,azsec-monitor,from yumrepos/azurecore; check versioning
 azure-cli, , 
 azuredw-spark, , 
-azure-mdsd,azure-mdsd,from yumrepos/azurecore
-azure-security,azure-security,from yumrepos/azurecore
+azure-mdsd,azure-mdsd,from yumrepos/azurecore; check versioning
+azure-security,azure-security,from yumrepos/azurecore; check versioning
 bigtop-groovy, , 
 bigtop-jsvc, , 
 bigtop-tomcat, , 
 bigtop-utils, , 
 bind9-host,bind-utils-9.16,bind-debuginfo-9.16
-binutils,binutils, 
+binutils,binutils,check versioning
 binutils-common,binutils-debuginfo, 
 binutils-x86-64-linux-gnu,binutils-devel, 
-blobfuse,blobfuse, 
-bridge-utils,bridge-utils, 
-clamav,clamav, 
+blobfuse,blobfuse,check versioning
+bridge-utils,bridge-utils,check versioning
+clamav,clamav,check versioning
 clamav-base,clamav-debuginfo, 
 clamav-freshclam,clamav-debuginfo, 
 cnscni, , 
-collectd,collectd, 
+collectd,collectd,check versioning
 collectd-core,collectd, 
 containerd,moby-containerd, 
-cpp,cpp, 
+cpp,cpp,check versioning
 cpp-7,cpp, 
 distro-info, , 
 dnsmasq-base,dnsmasq, 
 dnsutils,dnsmasq-utils, 
 docker.io, , 
-dos2unix,dos2unix, 
-dotnet-apphost-pack-3.1,dotnet-apphost-pack-3.2, 
-dotnet-host,dotnet-host, 
-dotnet-hostfxr-2.2,dotnet-hostfxr-2.1, 
-dotnet-hostfxr-3.1,dotnet-hostfxr-3.1, 
-dotnet-hostfxr-5.0,dotnet-hostfxr-5.0.8, 
-dotnet-runtime-2.2,dotnet-runtime-2.3, 
-dotnet-runtime-3.1,dotnet-runtime-3.2, 
-dotnet-runtime-5.0,dotnet-runtime-5.1, 
-dotnet-runtime-deps-2.2,dotnet-runtime-deps-3.1, 
-dotnet-runtime-deps-3.1,dotnet-runtime-deps-3.1, 
-dotnet-runtime-deps-5.0,dotnet-runtime-deps-5.0, 
-dotnet-sdk-2.2,dotnet-sdk-2.1, 
-dotnet-sdk-3.1,dotnet-sdk-3.2, 
-dotnet-targeting-pack-3.1,dotnet-targeting-pack-3.2, 
-fontconfig,fontconfig, 
+dos2unix,dos2unix,check versioning
+dotnet-apphost-pack-3.1,dotnet-apphost-pack-3.2,check versioning
+dotnet-host,dotnet-host,check versioning
+dotnet-hostfxr-2.2,dotnet-hostfxr-2.1,check versioning
+dotnet-hostfxr-3.1,dotnet-hostfxr-3.1,check versioning
+dotnet-hostfxr-5.0,dotnet-hostfxr-5.0.8,check versioning
+dotnet-runtime-2.2,dotnet-runtime-2.3,check versioning
+dotnet-runtime-3.1,dotnet-runtime-3.2,check versioning
+dotnet-runtime-5.0,dotnet-runtime-5.1,check versioning
+dotnet-runtime-deps-2.2,dotnet-runtime-deps-3.1,check versioning
+dotnet-runtime-deps-3.1,dotnet-runtime-deps-3.1,check versioning
+dotnet-runtime-deps-5.0,dotnet-runtime-deps-5.0,check versioning
+dotnet-sdk-2.2,dotnet-sdk-2.1,check versioning
+dotnet-sdk-3.1,dotnet-sdk-3.2,check versioning
+dotnet-targeting-pack-3.1,dotnet-targeting-pack-3.2,check versioning 
+fontconfig,fontconfig,check versioning
 fonts-dejavu,dejavu-sans-fonts,dejavu-sans-mono-fonts; dejavu-serif-fonts
 fonts-dejavu-extra,dejavu-sans-fonts,dejavu-sans-mono-fonts; dejavu-serif-fonts
 fonts-droid-fallback, , 
@@ -62,10 +62,10 @@ fonts-liberation, ,
 fonts-noto-mono, , 
 g++, , 
 g++-7, , 
-gcc,gcc, 
+gcc,gcc,check versioning
 gcc-7,gcc, 
 gcc-7-base,gcc, 
-ghostscript,ghostscript, 
+ghostscript,ghostscript,check versioning 
 gnupg2,gnupg2, 
 grub2-common,grub2-common, 
 grub-common,grub2-common, 
@@ -79,14 +79,14 @@ hadoop-2-6-99-201-39240152-client, ,
 hadoop-2-6-99-201-39240152-conf-pseudo, , 
 hadoop-2-6-99-201-39240152-hdfs, , 
 hadoop-2-6-99-201-39240152-hdfs-datanode, , 
-hadoop-2-6-99-201-39240152-hdfs-journalnode, , 
+hadoop-2-6-99-201-39240152-hdfs-journalnode, ,  
 hadoop-2-6-99-201-39240152-hdfs-namenode, , 
 hadoop-2-6-99-201-39240152-hdfs-secondarynamenode, , 
 hadoop-2-6-99-201-39240152-hdfs-zkfc, , 
 hadoop-2-6-99-201-39240152-httpfs, , 
 hadoop-2-6-99-201-39240152-httpfs-server, , 
 hadoop-2-6-99-201-39240152-mapreduce, , 
-hadoop-2-6-99-201-39240152-mapreduce-historyserver, , 
+hadoop-2-6-99-201-39240152-mapreduce-historyserver, ,  
 hadoop-2-6-99-201-39240152-yarn, , 
 hadoop-2-6-99-201-39240152-yarn-nodemanager, , 
 hadoop-2-6-99-201-39240152-yarn-proxyserver, , 
@@ -109,16 +109,16 @@ initramfs-tools-core,initramfs,
 iptables-persistent,iptables, 
 isc-dhcp-client,dchp-client, 
 isc-dhcp-common,dchp-common, 
-jq,jq, 
+jq,jq,check versioning
 libapr1,apr, 
 libaprutil1,apr-utils, 
 libapt-inst2.0, ,Ubuntu-specific 
 libapt-pkg5.0, ,Ubuntu-specific
-libasan4,libasan, 
+libasan4,libasan,check versioning
 libasound2, , 
 libasound2-data, , 
-libasyncns0,libasyncns, 
-libatomic1,libatomic, 
+libasyncns0,libasyncns,check versioning
+libatomic1,libatomic,check versioning
 libbind9-160,bind-libs, 
 libbinutils, , 
 libboost-context1.65.1,boost-context, 
@@ -138,22 +138,22 @@ libcupsfilters1, ,
 libcupsimage2, , 
 libcurl4-gnutls-dev,libcurl,libcurl-devel
 libcurl4-openssl-dev,libcurl,libcurl-devel
-libdatrie1,libdatrie, 
-libdbi1,libdibi, 
+libdatrie1,libdatrie,check versioning
+libdbi1,libdibi,check versioning
 libdns1100,avahi-compat-libdns_sd, 
 libdns-export1100,avahi-compat-libdns_sd-devel, 
-libev4,libev, 
+libev4,libev,check versioning
 libflac8,flac,flac-libs; flac-devel
-libfontenc1,libfontenc, 
+libfontenc1,libfontenc,check versioning
 libfreerdp2-2, , 
 libfreerdp-client2-2, , 
 libfreerdp-common1.1.0, , 
 libfreerdp-plugins-standard, , 
 libfreerdp-utils1.1, , 
 libgcc-7-dev,libgcc, 
-libgomp1,libgomp, 
+libgomp1,libgomp,check versioning
 libgraphite2-3,graphite,graphite-devel
-libgs9,libgs, 
+libgs9,libgs,check versioning
 libgs9-common,libgs, 
 libharfbuzz0b,harfbuzz,harfbuzz-devel
 libhdfs0-2-6-99-201-39240152, , 
@@ -165,7 +165,7 @@ libisccc160, ,
 libisccfg160, , 
 libisc-export169, , 
 libisl19, , 
-libitm1,libitm, 
+libitm1,libitm,check versioning
 libjbig0,jbigkit,jbigkit-devel; jbigkit-libs
 libjbig2dec0,jbig2dec-libs, 
 libjq1,jq, 
@@ -175,29 +175,29 @@ libltdl7,libtool-ltdl,
 liblttng-ust0,lttng-tools,lttng-st; lttng-devel
 liblttng-ust-ctl4,lttng-tools,lttng-st; lttng-devel
 liblwres160, , 
-libmpc3,libmpc, 
+libmpc3,libmpc,check versioning
 libmpx2, , 
-libnet1,libnet, 
+libnet1,libnet,check versioning
 libnettle6,nettle,nettle-devel; nettle-debuginfo
 libnss-systemd,systemdlibs, 
 libodbc1,libiodbc,libiodbc-devel
-libogg0,libogg,libogg-devel
+libogg0,libogg,libogg-devel; check versioning
 libonig4, , 
 libossp-uuid16,uuid,uuid-devel
 libpam-systemd,systemd-pam, 
 libpango-1.0-0,pango,pango-devel
 libpangocairo-1.0-0,pango,pango-devel
 libpangoft2-1.0-0,pango,pango-devel
-libpaper1,libpaper,libpaper-devel
+libpaper1,libpaper,libpaper-devel; check versioning
 libpaper-utils,libpaper,libpaper-devel
 libpixman-1-0,pixman,pixman-devel
-libpq5,libpq,libpq-devel
+libpq5,libpq,libpq-devel; check versioning
 libpulse0,pulseaudio,pulseaudio-libs
-libquadmath0,libquadmath,libquadmath-devel
+libquadmath0,libquadmath,libquadmath-devel; check versioning
 librrd8,rrdtool,rrd-devel
 libsensors4,lm_sensors,lm_sensors_devel
-libsndfile1,libsndfile,libsndinfo-debuginfo; libsndinfo-utils; libsndinfo-devel
-libssh2-1,libssh, 
+libsndfile1,libsndfile,libsndinfo-debuginfo; libsndinfo-utils; libsndinfo-devel; check versioning
+libssh2-1,libssh,check versioning
 libssl-dev,openssl,openssl-devel
 libstdc++-7-dev,libstdc++-devel, 
 libstrongswan,strongswan,strongswan-debuginfo
@@ -205,19 +205,19 @@ libstrongswan-standard-plugins,strongswan,strongswan-debuginfo
 libsystemd0,systemdlibs, 
 libtelnet2,telnet, 
 libtfm1, , 
-libthai0,libthai, 
+libthai0,libthai,check versioning
 libthai-data,libthai-devel, 
-libtiff5,libtiff,libtiff-devel; libtiff-tools
-libtsan0,libtsan, 
-libubsan0,libubsan, 
-libudev1,libgudev, 
+libtiff5,libtiff,libtiff-devel; libtiff-tools; check versioning
+libtsan0,libtsan,check versioning
+libubsan0,libubsan,check versioning
+libudev1,libgudev,check versioning
 liburcu6, , 
 libvorbis0a,libvorbus,libvorbis-devel; libvorbis-devel-docs
 libvorbisenc2,libvorbus,libvorbis-devel; libvorbis-devel-docs
 libwbclient0,libwbclient,libwbclient-devel
 libwebp6,libwebp,libwebp-devel; libwebp-debuginfo
 libwebsockets8,websocketpp-devel, 
-libwinpr2-2,libwinpr,libwinpr-devel
+libwinpr2-2,libwinpr,libwinpr-devel; check versioning
 libwinpr-crt0.1,libwinpr,libwinpr-devel
 libwinpr-environment0.1,libwinpr,libwinpr-devel
 libwinpr-file0.1,libwinpr,libwinpr-devel
@@ -230,12 +230,12 @@ libwinpr-synch0.1,libwinpr,libwinpr-devel
 libwinpr-sysinfo0.1,libwinpr,libwinpr-devel
 libwinpr-thread0.1,libwinpr,libwinpr-devel
 libwinpr-utils0.1,libwinpr,libwinpr-devel
-libx11-6,libx11,libx11-common; libx11-debuginfo; libx11-devel; libx11-xcb
+libx11-6,libx11,libx11-common; libx11-debuginfo; libx11-devel; libx11-xcb; check versioning
 libx11-data,libx11,libx11-common; libx11-debuginfo; libx11-devel; libx11-xcb
 libxcb-render0,libxcb,libxcb-debuginfo; libxcb-devel
 libxcb-shm0,libxcb,libxcb-debuginfo; libxcb-devel
 libxkbfile1,libxkbcommon,libxkbcommon-debuginfo; libkcbcommon-devel; libxkbcommon-utils
-libxml2,libxml2,libxml2-devel
+libxml2,libxml2,libxml2-devel; check versioning
 linux-azure, , 
 linux-azure-4.15-cloud-tools-4.15.0-1115, , 
 linux-azure-4.15-headers-4.15.0-1115, , 
@@ -262,32 +262,32 @@ linux-tools-common,kernel-tools,
 livy2-2-6-99-201-39240152, , 
 manpages-dev,gl-manpages, 
 metricsext2, , 
-moby-buildx,moby-buildx,moby-buildx-debuginfo
-moby-cli,moby-cli,moby-cli-debuginfo
-moby-containerd,moby-containerd, 
-moby-engine,moby-engine,moby-engine-debuginfo
-moby-runc,moby-runc,moby-runc-debuginfo
+moby-buildx,moby-buildx,moby-buildx-debuginfo; check versioning
+moby-cli,moby-cli,moby-cli-debuginfo; check versioning
+moby-containerd,moby-containerd,check versioning
+moby-engine,moby-engine,moby-engine-debuginfo; check versioning
+moby-runc,moby-runc,moby-runc-debuginfo; check versioning
 msodbcsql17, , 
-mysql-common,mysql-common, 
+mysql-common,mysql-common,check versioning
 netfilter-persistent,libnetfilter_queue,libnetfilter-queue-devel
 netstandard-targeting-pack-2.1,netstandard-targeting-pack, 
-nginx,nginx, 
-ngrep,grep, 
+nginx,nginx,check versioning
+ngrep,grep,
 odbcinst,libodbc,libodbc-devel
 odbcinst1debian2, , 
 openvswitch-common,openvswitch,openvswitch-devel; openvswitch-debuginfo; openvswitch-devel-static
 openvswitch-switch,openvswitch,openvswitch-devel; openvswitch-debuginfo; openvswitch-devel-static
 packages-microsoft-prod, , 
-pigz,pigz, 
+pigz,pigz,check versioning
 poppler-data, , 
 python3-apport, , 
 python3-problem-report, , 
-python-samba,python3-samba, 
+python-samba,python3-samba,check versioning 
 qualys-command-line-agent, , 
-runc,runc,runc-debuginfo; mody-runc
-samba-common,samba-common, 
+runc,runc,runc-debuginfo; mody-runc; check versioning
+samba-common,samba-common,check versioning
 samba-common-bin,samba-common-libs,samba-common-tools
-samba-libs,samba-libs, 
+samba-libs,samba-libs,check versioning
 sosreport,sos,sos-audit
 spark2-2-6-99-201-39240152, , 
 spark2-2-6-99-201-39240152-master, , 
@@ -295,26 +295,26 @@ spark2-2-6-99-201-39240152-python, ,
 spark2-2-6-99-201-39240152-worker, , 
 spark2-2-6-99-201-39240152-yarn-shuffle, , 
 sparkmetrics-2-6-99-201-39240152, , 
-strongswan,strongswan,strongswan-debuginfo
+strongswan,strongswan,strongswan-debuginfo; check versioning
 strongswan-charon,strongswan,strongswan-debuginfo
 strongswan-libcharon,strongswan,strongswan-debuginfo
 strongswan-starter,strongswan,strongswan-debuginfo
-systemd,systemd,systemd-devel
-systemd-sysv,systemd-sysv, 
-td-agent,td-agent, 
-telegraf,telegraf, 
-tree,tree, 
+systemd,systemd,systemd-devel; check versioning
+systemd-sysv,systemd-sysv,check versioning 
+td-agent,td-agent,check versioning
+telegraf,telegraf,check versioning
+tree,tree,check versioning
 ubuntu-advantage-tools, ,Ubuntu-specific
 ubuntu-fan, ,Ubuntu-specific
 udev,libgudev, 
-unixodbc,unixodbc,unixodbc-devel
-unzip,unzip, 
+unixodbc,unixodbc,unixodbc-devel; check versioning
+unzip,unzip,check versioning
 update-notifier-common, , 
 vnetinjection, , 
 xfonts-encodings, , 
 xfonts-terminus, , 
 xfonts-utils, , 
-zip,zip, 
+zip,zip,check versioning 
 zookeeper-2-6-99-201-39240152, , 
 zookeeper-2-6-99-201-39240152-server, , 
 zulu-8-azure-jre-headless, , 

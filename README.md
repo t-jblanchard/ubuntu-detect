@@ -53,3 +53,14 @@ $ git clone https://github.com/t-jblanchard/ubuntu-detect.git
 ```
 $ git push -u origin main
 ```
+
+## Sample I/O
+Input: 
+```
+$ git clone https://github.com/t-jblanchard/ubuntu-detect.git
+$ ./detect.py ~/codebase
+```
+Output (into top-level of ubuntu-detect):
+```
+$ commands.csv	  packages.csv	  filepaths.csv
+```
