@@ -5,7 +5,7 @@
 * [Technologies](#technologies)
 * [Setup](#setup)
 * [Usage](#usage)
-* [Sample I/O](#sample-i/o)
+* [Sample I/O](#sample-io)
 * [Updates](#updates)
 
 ## General Info
