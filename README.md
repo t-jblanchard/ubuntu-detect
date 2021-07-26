@@ -55,7 +55,7 @@ Output Format:
 ```
 * **filepath_data.csv**: directory/filepaths in codebase  
 ```
-[full path],[Ubuntu relative path],[Mariner counterpart],[notes]
+[full path],[Ubuntu relative path],[Mariner counterpart (if applicable)],[notes]
 ```
 
 ## Sample I/O
