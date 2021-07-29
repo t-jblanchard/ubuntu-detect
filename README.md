@@ -8,6 +8,7 @@
 * [Data Output](#data-output)
 * [Sample I/O](#sample-io)
 * [Warnings](#warnings)
+* [Custom Data](#custom-data)
 * [Admin Updates](#admin-updates)
 
 ## General Info
@@ -81,6 +82,12 @@ flagged_files.csv    packages.csv    commands.csv    filepaths.csv    filepaths_
 ## Warnings 
 * When using the tool, keep in mind that the scanned for instances are not 100% comprehensive, and all suggested Mariner replacements won't be universally applicable. 
 * Some files that are you've pulled in from open-source may get flagged, so it is important to evaluate the data with that in mind. 
+
+## Custom Data
+If you know your service well, and have specific instances in mind you would like the tool to scan for the .csv files in /ubuntu-detect/database can be customized. Use the following format to edit packages.csv, commands.csv, or filepaths.csv with the following format (delimeter: ','):  
+```
+[ubuntu package/command/filepath],[mariner replacement],[notes]
+```
 
 ## Admin Updates
 _Note: Instructions are for on a machine, but updates can also be done directly on GitHub_
