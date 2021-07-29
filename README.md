@@ -5,11 +5,15 @@
 * [Technologies](#technologies)
 * [Setup](#setup)
 * [Usage](#usage)
+* [Data Output](#data-output)
 * [Sample I/O](#sample-io)
-* [Updates](#updates)
+* [Warnings](#warnings)
+* [Admin Updates](#admin-updates)
 
 ## General Info
-A tool to scan a codebase, directory, or file for a list of common Ubuntu-specific packages, commands, and file/directory paths. The tool aims to speed up the codebase reconfiguration process and assist in planning of time and resources when migrating from Ubuntu to Mariner. When using the tool, keep in mind that the scanned for instances are not 100% comprehensive, and all suggested Mariner replacements won't be universally applicable. 
+[Overview Page](eng.ms/Mariner)  
+
+A tool to scan a codebase, directory, or file for a list of common Ubuntu-specific packages, commands, and file/directory paths. The tool aims to speed up the codebase reconfiguration process and assist in planning of time and resources when migrating from Ubuntu to Mariner.
 
 ## Technologies
 Project is created with:
@@ -40,22 +44,27 @@ To run script on specific file or directory:
 ```
 $ ./detect.py [full path]
 ```
-Output Format:
-* **package_data.csv**: packages hardcoded into files in codebase  
+## Data Output
+Output Format in ubuntu-detect/data-output:
+* **flagged_files.csv**: compiled list of anyfile in the codebase/directory that gets flagged with Ubuntu-specific syntax 
+```
+[full filepath]
+```
+* **packages.csv**: packages hardcoded into files in codebase  
 ```
 [full filepath],[list of line numbers],[Ubuntu package],[Mariner counterpart (if applicable)],[notes]
 ```
-* **command_data.csv**: commands hardcoded into files in codebase  
+* **commands.csv**: commands hardcoded into files in codebase  
 ```
 [full filepath],[list of line numbers],[Ubuntu command],[Mariner counterpart (if applicable)],[notes]
 ```
-* **filepath_inline_data.csv**: paths hardcoded into files in codebase  
-```
-[full filepath],[list of line numbers],[Ubuntu path],[Mariner counterpart (if applicable)],[notes]
-```
-* **filepath_data.csv**: directory/filepaths in codebase  
+* **filepaths.csv**: directory/filepaths in codebase  
 ```
 [full path],[Ubuntu relative path],[Mariner counterpart (if applicable)],[notes]
+```
+* **filepaths_inline.csv**: paths hardcoded into files in codebase  
+```
+[full filepath],[list of line numbers],[Ubuntu path],[Mariner counterpart (if applicable)],[notes]
 ```
 
 ## Sample I/O
@@ -64,20 +73,25 @@ Input:
 $ git clone https://github.com/t-jblanchard/ubuntu-detect.git
 $ ./detect.py ~/codebase
 ```
-Output (into top-level of ubuntu-detect):
+Output (into ubuntu-detect/data-output):
 ```
-command_data.csv    package_data.csv    filepath_data.csv    filepath_inline_data.csv
+flagged_files.csv    packages.csv    commands.csv    filepaths.csv    filepaths_inline.csv
 ```
 
-## Updates
+## Warnings 
+* When using the tool, keep in mind that the scanned for instances are not 100% comprehensive, and all suggested Mariner replacements won't be universally applicable. 
+* Some files that are you've pulled in from open-source may get flagged, so it is important to evaluate the data with that in mind. 
+
+## Admin Updates
 _Note: Instructions are for on a machine, but updates can also be done directly on GitHub_
 1. Clone repository onto machine:
 ```
 $ git clone https://github.com/t-jblanchard/ubuntu-detect.git
 ```
 2. Update packages.csv, commands.csv, or filepaths.csv with the following format (delimeter: ','):  
-	**[ubuntu package/command/filepath],[mariner replacement],[notes]**
-
+```
+[ubuntu package/command/filepath],[mariner replacement],[notes]
+```
 3. Push changes to repo:
 ```
 $ git push -u origin main
