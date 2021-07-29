@@ -29,22 +29,23 @@ $ git clone https://github.com/t-jblanchard/ubuntu-detect.git
 ## Usage 
 _Note: Always run in top-level of ubuntu-detect directory_  
 
-To ensure latest update of script run:
+1. To ensure latest update of script run:
 ```
 $ git pull
 ```
-To see usage information:  
+2. To see usage information:  
 ```
 $ ./detect.py usage
 ```
-To run script on entire codebase:  
+3. To run script on entire codebase:  
 ```
 $ ./detect.py [full codebase path]
 ```
-To run script on specific file or directory:
+4. To run script on specific file or directory:
 ```
 $ ./detect.py [full path]
 ```
+5. After running the tool, visit the [References](), for more detailed information about your outputted data. 
 ## Data Output
 Output Format in ubuntu-detect/data-output:
 * **flagged_files.csv**: compiled list of anyfile in the codebase/directory that gets flagged with Ubuntu-specific syntax 
