@@ -35,15 +35,15 @@ $ git pull
 ```
 2. To see usage information:  
 ```
-$ ./detect.py usage
+$ python3 detect.py usage
 ```
 3. To run script on entire codebase:  
 ```
-$ ./detect.py [full codebase path]
+$ python3 detect.py [full codebase path]
 ```
 4. To run script on specific file or directory:
 ```
-$ ./detect.py [full path]
+$ python3 detect.py [full path]
 ```
 5. After running the tool, visit the [References](), for more detailed information about your outputted data. 
 ## Data Output
