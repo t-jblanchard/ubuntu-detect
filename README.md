@@ -73,7 +73,7 @@ Output Format in ubuntu-detect/data-output:
 Input: 
 ```
 $ git clone https://github.com/t-jblanchard/ubuntu-detect.git
-$ ./detect.py ~/codebase
+$ python3 detect.py ~/codebase
 ```
 Output (into ubuntu-detect/data-output):
 ```
