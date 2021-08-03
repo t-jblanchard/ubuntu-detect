@@ -1,4 +1,4 @@
-# Ubuntu Detection Tool
+# Atlas
 
 ## Table of Contents
 * [General Info](#general-info)
